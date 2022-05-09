@@ -9,7 +9,7 @@ public class festival
 {
     private JFrame frame ;
     private JTextField fields[];
-    
+    private JLabel label2[];
     
     public festival()
     {
@@ -36,6 +36,7 @@ public class festival
     {   
         festival fest = new festival();
         fest.user_input();
+        fest.box_labels();
     } 
 
     public void user_input()
@@ -48,6 +49,21 @@ public class festival
             fields[i].setBounds(300, pos, 160, 30);
             pos = pos + 50;
             frame.getContentPane().add(fields[i]);       
+        }
+    }
+
+    public void box_labels()
+    {
+        String[] inputs = {"headliner time", "act name", "duration", "priority"};
+        int pos2 = 60;
+        label2 = new JLabel[4];
+        for (int i = 0; i <= 3; i++)
+        {
+            label2[i] = new JLabel(inputs[i]);
+            label2[i].setForeground(Color.WHITE);
+            label2[i].setBounds(160, pos2, 185, 185);
+            pos2 = pos2 + 50;
+            frame.getContentPane().add(label2[i]);
         }
     }
 }
