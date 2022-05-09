@@ -4,8 +4,10 @@ import javax.swing.JLabel;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import java.awt.Font;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
-public class festival
+public class festival extends JFrame implements ActionListener
 {
     private JFrame frame ;
     private JTextField fields[];
@@ -50,6 +52,10 @@ public class festival
             pos = pos + 50;
             frame.getContentPane().add(fields[i]);       
         }
+        JButton submit = new JButton("submit");
+        submit.setBounds(270, 360, 100, 30);
+        frame.getContentPane().add(submit);
+        submit.addActionListener(this);
     }
 
     public void box_labels()
@@ -66,4 +72,23 @@ public class festival
             frame.getContentPane().add(label2[i]);
         }
     }
+
+    public void actionPerformed(ActionEvent e)
+   {
+       try {
+        String headliner = fields[0].getText();
+        String name = fields[1].getText();
+        String duration = fields[2].getText();
+        String priority = fields[3].getText();
+
+        System.out.println(headliner);
+        System.out.println(name);
+        System.out.println(duration);
+        System.out.println(priority);
+
+       } catch (Exception e) {
+        System.out.println("somthing went wrong");
+       }
+   }
+
 }
