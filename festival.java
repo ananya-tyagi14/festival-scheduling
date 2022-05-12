@@ -1,4 +1,3 @@
-import javax.script.ScriptEngineManager;
 import javax.swing.*;
 import java.awt.Color;
 import javax.swing.JLabel;
@@ -13,15 +12,17 @@ public class festival extends JFrame implements ActionListener
 {
     private JFrame frame;
     private JTextField fields[];
+    private JTextField fields2[];
     private JLabel label2[];
     private JButton buttons[];
+    private int num_acts;
     
     //constructor creates the frame for the main window
     public festival()
     {
         frame  = new JFrame("festival");
 
-        frame.setLayout(null);
+        frame.setLayout(null); //allows the components to be positioned freely
 
         frame.getContentPane().setBackground(Color.BLACK);
 
@@ -53,6 +54,8 @@ public class festival extends JFrame implements ActionListener
         int label_pos = 80;
         String[] inputs = {"Number of acts", "headliner time"};
 
+        fields2 = new JTextField[2];
+
         for (int i = 0; i <= 1; i++)
         {
             JLabel inputLabel = new JLabel(inputs[i]);
@@ -61,10 +64,10 @@ public class festival extends JFrame implements ActionListener
             label_pos = label_pos + 80;
             frame.getContentPane().add(inputLabel);
 
-            JTextField head = new JTextField();
-            head.setBounds(228, box_pos, 160, 30);
+            fields2[i] = new JTextField();
+            fields2[i].setBounds(228, box_pos, 160, 30);
             box_pos = box_pos + 80;
-            frame.getContentPane().add(head);
+            frame.getContentPane().add(fields2[i]);
         }
         
     }
@@ -90,10 +93,14 @@ public class festival extends JFrame implements ActionListener
             frame.getContentPane().removeAll();
             frame.repaint();
             this.user_input();
+            num_acts = Integer.parseInt(fields2[0].getText());
+            String headliner = fields2[1].getText();
+            System.out.println(headliner);
+            
         }
         else if (e.getSource() == buttons[1])
         {
-            System.out.println("button2");
+            this.getinfo();
         }
 
     }
@@ -101,37 +108,48 @@ public class festival extends JFrame implements ActionListener
     public void user_input()
     {
         String[] inputs2 = {"act name", "duration", "priority"};
-        int pos2 = 60;
-        label2 = new JLabel[3];
+        int pos2 = 60;       
         int pos = 140;
         fields = new JTextField[3];
         for (int i = 0; i <= 2; i++)
         {
-            label2[i] = new JLabel(inputs2[i]);
-            label2[i].setForeground(Color.WHITE);
-            label2[i].setBounds(160, pos2, 185, 185);
+            JLabel inputlabel2 = new JLabel(inputs2[i]);
+            inputlabel2.setForeground(Color.WHITE);
+            inputlabel2.setBounds(170, pos2, 185, 185);
             pos2 = pos2 + 50;
-            frame.getContentPane().add(label2[i]);
+            frame.getContentPane().add(inputlabel2);
 
             fields[i]= new JTextField();
-            fields[i].setBounds(300, pos, 160, 30);
+            fields[i].setBounds(290, pos, 160, 30);
             pos = pos + 50;
             frame.getContentPane().add(fields[i]);       
         }
-        frame.getContentPane().add(buttons[1]); 
+        frame.getContentPane().add(buttons[1]);  
     }
 
     public void getinfo()
-    {
-        String headliner = fields[0].getText();
-        String name = fields[1].getText();
-        String duration = fields[2].getText();
-        String priority = fields[3].getText();
+    {   
+        String name = fields[0].getText();
+        String duration = fields[1].getText();
+        String priority = fields[2].getText();
 
-        for (int i = 0; i <= 3; i++)
+        if (num_acts > 1)
         {
-            fields[i].setText("");
-        } 
+            for (int i = 0; i <= 2; i++)
+            {
+               fields[i].setText("");
+            }
+            num_acts = num_acts - 1;
+        }
+        else
+        {
+            frame.getContentPane().removeAll();
+            frame.repaint();
+        }
+        System.out.println(name);
+        System.out.println(duration);
+        System.out.println(priority);
+        System.out.println("\n");
     }
 
 } 
