@@ -38,64 +38,76 @@ public class festival extends JFrame implements ActionListener
         frame.setTitle("window");
         frame.setVisible(true);
 
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // the window closes when the user presses the exit button
        
     }
 
     public static void main(String[] args) 
     {   
-        festival fest = new festival();
+        festival fest = new festival(); // creates an instance of the class to access methods
         fest.buttons();     
     } 
 
+    // creates the inital layout which asks for headliner time and number of acts
     public void main_window()
     {
-        int box_pos = 200;
-        int label_pos = 80;
-        String[] inputs = {"Number of acts", "headliner time"};
+        int box_pos = 150;
+        int label_pos = 85;
+        String[] inputs = {"Event name", "Number of acts", "Headliner time"};
 
-        fields2 = new JTextField[2];
+        fields2 = new JTextField[3];
 
-        for (int i = 0; i <= 1; i++)
+        for (int i = 0; i <= 2; i++)
         {
             JLabel inputLabel = new JLabel(inputs[i]);
-            inputLabel.setForeground(Color.WHITE);      
-            inputLabel.setBounds(228, label_pos, 400, 200);
+            inputLabel.setForeground(Color.WHITE);  
+            inputLabel.setFont(new Font("Serif", Font.PLAIN, 15));    
+            inputLabel.setBounds(130, label_pos, 185, 185);
             label_pos = label_pos + 80;
             frame.getContentPane().add(inputLabel);
 
             fields2[i] = new JTextField();
-            fields2[i].setBounds(228, box_pos, 160, 30);
+            fields2[i].setBounds(270, box_pos, 210, 60);
             box_pos = box_pos + 80;
             frame.getContentPane().add(fields2[i]);
         }
         
-    }
+    }   
 
+
+    // this method creates the different buttons through out the scheduling process
     public void buttons()
     {
         String[] names = {"next", "enter"};
-        buttons = new JButton[2];
+        buttons = new JButton[2]; //buttons will be stored in an array once created instead of initialising each one manually
         for (int j = 0; j <= 1; j++)
         {
             buttons[j] = new JButton(names[j]);
-            buttons[j].setBounds(258, 340, 100, 30);  
+            buttons[j].setBounds(228, 380, 150, 40);  
         }  
         frame.getContentPane().add(buttons[0]);
         buttons[0].addActionListener(this);
         buttons[1].addActionListener(this);
     }
 
+    //this method is automatically called when a button is pressed
     public void actionPerformed(ActionEvent e)
     {
+        //if statements branch in repsonse to the specific button that is clicked by retrieving the button name
         if (e.getSource() == buttons[0])
         {
-            frame.getContentPane().removeAll();
-            frame.repaint();
+            frame.getContentPane().removeAll(); //clears the page by removing all the components added to it 
+            frame.repaint(); //
+
             this.user_input();
-            num_acts = Integer.parseInt(fields2[0].getText());
-            String headliner = fields2[1].getText();
-            System.out.println(headliner);
+            try {
+                num_acts = Integer.parseInt(fields2[0].getText());
+                String headliner = fields2[1].getText();
+                System.out.println(headliner);
+            } catch (Exception f) {
+                System.out.println("Error: no info was entered");
+            }
+            
             
         }
         else if (e.getSource() == buttons[1])
@@ -105,51 +117,59 @@ public class festival extends JFrame implements ActionListener
 
     }
 
+    // this method is responsible for creating the GUI for the act info
     public void user_input()
     {
-        String[] inputs2 = {"act name", "duration", "priority"};
-        int pos2 = 60;       
-        int pos = 140;
+        String[] inputs2 = {"Act name", "Duration", "Priority"};
+        int pos2 = 40;       
+        int pos = 100;
         fields = new JTextField[3];
         for (int i = 0; i <= 2; i++)
         {
             JLabel inputlabel2 = new JLabel(inputs2[i]);
+            inputlabel2.setFont(new Font("Serif", Font.PLAIN, 18));
             inputlabel2.setForeground(Color.WHITE);
-            inputlabel2.setBounds(170, pos2, 185, 185);
-            pos2 = pos2 + 50;
+            inputlabel2.setBounds(140, pos2, 185, 185);
+            pos2 = pos2 + 100;
             frame.getContentPane().add(inputlabel2);
 
             fields[i]= new JTextField();
-            fields[i].setBounds(290, pos, 160, 30);
-            pos = pos + 50;
+            fields[i].setBounds(270, pos, 210, 60);
+            pos = pos + 100;
             frame.getContentPane().add(fields[i]);       
         }
-        frame.getContentPane().add(buttons[1]);  
+        frame.getContentPane().add(buttons[1]);
     }
 
+    //This method is responsible for retreiving and storing the values entered into the input boxes
     public void getinfo()
-    {   
-        String name = fields[0].getText();
-        String duration = fields[1].getText();
-        String priority = fields[2].getText();
+    {  
+        try {
+            String name = fields[0].getText();
+            String duration = fields[1].getText();
+            String priority = fields[2].getText();
 
-        if (num_acts > 1)
-        {
-            for (int i = 0; i <= 2; i++)
+            if (num_acts > 1)
             {
-               fields[i].setText("");
+                for (int i = 0; i <= 2; i++)
+                {
+                fields[i].setText(""); //clears the boxes for new info to be entered
+                }
+                num_acts = num_acts - 1; //counter is decremented
             }
-            num_acts = num_acts - 1;
-        }
-        else
-        {
-            frame.getContentPane().removeAll();
-            frame.repaint();
-        }
-        System.out.println(name);
-        System.out.println(duration);
-        System.out.println(priority);
-        System.out.println("\n");
+            else
+            {
+                frame.getContentPane().removeAll();
+                frame.repaint();
+            }
+
+            System.out.println(name);
+            System.out.println(duration);
+            System.out.println(priority);
+            System.out.println("\n");
+        } catch (Exception e) {
+            System.out.println("Error: no info was entered");
+        } 
     }
 
 } 
