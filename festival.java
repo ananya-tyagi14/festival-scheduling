@@ -96,16 +96,19 @@ public class festival extends JFrame implements ActionListener
         //if statements branch in repsonse to the specific button that is clicked by retrieving the button name
         if (e.getSource() == buttons[0])
         {
-            frame.getContentPane().removeAll(); //clears the page by removing all the components added to it 
-            frame.repaint(); //
-
-            this.user_input();
-            try {
-                num_acts = Integer.parseInt(fields2[0].getText());
-                String headliner = fields2[1].getText();
-                System.out.println(headliner);
-            } catch (Exception f) {
-                System.out.println("Error: no info was entered");
+            try 
+            {
+                String act_name = fields2[0].getText();
+                num_acts = Integer.parseInt(fields2[1].getText());
+                String headliner = fields2[2].getText();
+                
+                frame.getContentPane().removeAll(); //clears the page by removing all the components added to it 
+                frame.repaint(); 
+                this.user_input();
+            } 
+            catch (Exception f) 
+            {
+                JOptionPane.showMessageDialog(frame, "Error: information is missing");
             }
             
             
@@ -168,7 +171,7 @@ public class festival extends JFrame implements ActionListener
             System.out.println(priority);
             System.out.println("\n");
         } catch (Exception e) {
-            System.out.println("Error: no info was entered");
+            JOptionPane.showMessageDialog(frame, "Error: information is missing");
         } 
     }
 
