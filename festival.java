@@ -16,6 +16,10 @@ public class festival extends JFrame implements ActionListener
     private JLabel label2[];
     private JButton buttons[];
     private int num_acts;
+    private String[] act_names = new String[20];
+    private int[] duration = new int[20];
+    private int[] priority = new int[20];
+    private int index = 0;
     
     //constructor creates the frame for the main window
     public festival()
@@ -147,32 +151,32 @@ public class festival extends JFrame implements ActionListener
     //This method is responsible for retreiving and storing the values entered into the input boxes
     public void getinfo()
     {  
-        try {
-            String name = fields[0].getText();
-            String duration = fields[1].getText();
-            String priority = fields[2].getText();
+        try 
+        {
+            act_names[index] = fields[0].getText();
+            duration[index] = Integer.parseInt(fields[1].getText());
+            priority[index] = Integer.parseInt(fields[2].getText());
 
-            if (num_acts > 1)
-            {
-                for (int i = 0; i <= 2; i++)
-                {
-                fields[i].setText(""); //clears the boxes for new info to be entered
-                }
-                num_acts = num_acts - 1; //counter is decremented
-            }
-            else
-            {
-                frame.getContentPane().removeAll();
-                frame.repaint();
-            }
-
-            System.out.println(name);
-            System.out.println(duration);
-            System.out.println(priority);
-            System.out.println("\n");
-        } catch (Exception e) {
+        } 
+        catch (Exception e) 
+        {
             JOptionPane.showMessageDialog(frame, "Error: information is missing");
         } 
+
+        if (num_acts > 1)
+        {
+            for (int i = 0; i <= 2; i++)
+            {
+                fields[i].setText(""); //clears the boxes for new info to be entered
+            }
+            num_acts = num_acts - 1; //counter is decremented
+        }
+        else
+        {
+            frame.getContentPane().removeAll();
+            frame.repaint();
+        }
+        index++;
     }
 
 } 
