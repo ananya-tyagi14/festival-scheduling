@@ -7,6 +7,7 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.time.LocalTime;
 
 public class festival extends JFrame implements ActionListener
 {
@@ -105,6 +106,8 @@ public class festival extends JFrame implements ActionListener
                 String act_name = fields2[0].getText();
                 num_acts = Integer.parseInt(fields2[1].getText());
                 String headliner = fields2[2].getText();
+                LocalTime Time = LocalTime.parse(headliner);
+                System.out.println(Time);
                 
                 frame.getContentPane().removeAll(); //clears the page by removing all the components added to it 
                 frame.repaint(); 
