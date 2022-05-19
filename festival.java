@@ -178,8 +178,27 @@ public class festival extends JFrame implements ActionListener
         {
             frame.getContentPane().removeAll();
             frame.repaint();
+            this.scheduling();
         }
         index++;
     }
+
+    public void scheduling()
+    {
+        num_acts = Integer.parseInt(fields2[1].getText());
+        int num = 1;
+        while(num != (num_acts + 1))
+        {
+            for (int i = 0; i <= num_acts; i++)
+            {
+                if(priority[i] == num) 
+                {                  
+                    System.out.println(duration[i]);
+                }    
+                   
+            }
+            num = num + 1;
+        }      
+    } 
 
 } 
