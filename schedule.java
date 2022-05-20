@@ -25,7 +25,6 @@ public class schedule extends JFrame implements ActionListener
     private String[] act_names = new String[20];
     private int[] duration = new int[20];
     private int[] priority = new int[20];
-    private int[] order_duration = new int[20];
     private LocalTime[] act_times = new LocalTime[20];
     private int index = 0;
     private int i = 0;
@@ -90,8 +89,6 @@ public class schedule extends JFrame implements ActionListener
                 show_name = fields2[0].getText();
                 num_acts = Integer.parseInt(fields2[1].getText());
                 time = LocalTime.parse(fields2[2].getText());
-                act_times[0] = time;
-                System.out.println(time);
                 
                 frame.getContentPane().removeAll();
                 frame.repaint();
@@ -164,22 +161,24 @@ public class schedule extends JFrame implements ActionListener
     }
 
     public void ordering()
-    {
+    {       
         int gap = 8;
         num_acts = Integer.parseInt(fields2[1].getText());
         int num = 1;
-        int j = 1;
+        int j = 0;
+        System.out.println(time); 
         while(num != (num_acts + 1))
         {
             for (int i = 0; i <= num_acts; i++)
             {
                 if(priority[i] == num) 
-                {                  
-                    System.out.println(duration[i]);
+                {      
+                    System.out.println(priority[i]);            
+                    System.out.println(act_names[i]);
+                    System.out.println("\n");
                     time = time.plusMinutes(duration[i]+gap);
-                    System.out.println(time);
-                }    
-                   
+                    System.out.println(time); 
+                }                     
             }
             num = num + 1;
         }
