@@ -169,20 +169,15 @@ public class schedule extends JFrame implements ActionListener
         this.table();
         int gap = 8;
         num_acts = Integer.parseInt(fields2[1].getText());
-        int num = 1;
-        int j = 0;
-        System.out.println(time); 
+        int num = 1; 
         while(num != (num_acts + 1))
         {
             for (int i = 0; i <= num_acts; i++)
             {
                 if(priority[i] == num) 
                 {      
-                    System.out.println(priority[i]);            
-                    System.out.println(act_names[i]);
-                    System.out.println("\n");
+                    model.addRow(new Object[] {priority[i], time , act_names[i]});
                     time = time.plusMinutes(duration[i]+gap);
-                    System.out.println(time); 
                 }                     
             }
             num = num + 1;
