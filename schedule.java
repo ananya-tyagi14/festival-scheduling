@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 public class schedule extends JFrame implements ActionListener
 {
     private JFrame frame;
+    private JPanel panel;
     private JTextField fields[];
     private JTextField fields2[];
     private JButton main_button;
@@ -22,6 +23,7 @@ public class schedule extends JFrame implements ActionListener
     private String show_name;
     private int num_acts;
     private LocalTime time;
+    private LocalTime headliner;
     private String[] act_names = new String[20];
     private int[] duration = new int[20];
     private int[] priority = new int[20];
@@ -29,9 +31,10 @@ public class schedule extends JFrame implements ActionListener
     private int index = 0;
     private int i = 0;
 
-    public schedule(JFrame f)
+    public schedule(JFrame f, JPanel p)
     {
         frame = f;
+        panel = p;
 
     }
 
@@ -46,16 +49,16 @@ public class schedule extends JFrame implements ActionListener
         for (int i = 0; i <= 2; i++)
         {
             JLabel inputLabel = new JLabel(inputs[i]);
-            inputLabel.setForeground(Color.WHITE);  
-            inputLabel.setFont(new Font("Serif", Font.PLAIN, 18));    
-            inputLabel.setBounds(85, label_pos, 185, 185);
+            inputLabel.setForeground(Color.BLACK);  
+            inputLabel.setFont(new Font("Serif", Font.PLAIN, 15));    
+            inputLabel.setBounds(90, label_pos, 185, 185);
             label_pos = label_pos + 100;
-            frame.getContentPane().add(inputLabel);
+            panel.add(inputLabel);
 
             fields2[i] = new JTextField();
-            fields2[i].setBounds(240, box_pos, 280, 80);
+            fields2[i].setBounds(270, box_pos, 250, 80);
             box_pos = box_pos + 100;
-            frame.getContentPane().add(fields2[i]);
+            panel.add(fields2[i]);
         }
     }
 
@@ -74,7 +77,7 @@ public class schedule extends JFrame implements ActionListener
             buttons[j].setBounds(pos, 450, 210, 60);  
             pos = pos + 220;
         }  
-        frame.getContentPane().add(main_button);
+        panel.add(main_button);
         main_button.addActionListener(this);
         buttons[0].addActionListener(this);
         buttons[1].addActionListener(this);
@@ -90,8 +93,8 @@ public class schedule extends JFrame implements ActionListener
                 num_acts = Integer.parseInt(fields2[1].getText());
                 time = LocalTime.parse(fields2[2].getText());
                 
-                frame.getContentPane().removeAll();
-                frame.repaint();
+                panel.removeAll(); //clears the page by removing all the components added to it 
+                panel.repaint(); 
                 this.user_input();
             } 
             catch (Exception f) 
@@ -115,19 +118,19 @@ public class schedule extends JFrame implements ActionListener
         for (int i = 0; i <= 2; i++)
         {
             JLabel inputlabel2 = new JLabel(inputs2[i]);
-            inputlabel2.setFont(new Font("Serif", Font.PLAIN, 18));
-            inputlabel2.setForeground(Color.WHITE); 
+            inputlabel2.setFont(new Font("Serif", Font.PLAIN, 15));
+            inputlabel2.setForeground(Color.BLACK); 
             inputlabel2.setBounds(85, pos2, 185, 185);
             pos2 = pos2 + 100;
-            frame.getContentPane().add(inputlabel2);
+            panel.add(inputlabel2);
 
             fields[i]= new JTextField();
             fields[i].setBounds(240, pos, 280, 80);
             pos = pos + 100;
-            frame.getContentPane().add(fields[i]);       
+            panel.add(fields[i]);       
         }
-        frame.getContentPane().add(buttons[0]);
-        frame.getContentPane().add(buttons[1]);
+        panel.add(buttons[0]);
+        panel.add(buttons[1]);
     }
 
     public void getinfo()
@@ -161,7 +164,7 @@ public class schedule extends JFrame implements ActionListener
     }
 
     public void ordering()
-    {       
+    {
         int gap = 8;
         num_acts = Integer.parseInt(fields2[1].getText());
         int num = 1;
@@ -182,5 +185,6 @@ public class schedule extends JFrame implements ActionListener
             }
             num = num + 1;
         }
-    }   
+        
+    }  
 }
