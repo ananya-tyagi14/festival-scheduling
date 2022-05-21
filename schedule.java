@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JOptionPane;
 import java.time.LocalTime;
 import javax.swing.JPanel;
+import javax.swing.table.DefaultTableModel;
 
 
 public class schedule extends JFrame implements ActionListener
@@ -23,13 +24,13 @@ public class schedule extends JFrame implements ActionListener
     private String show_name;
     private int num_acts;
     private LocalTime time;
-    private LocalTime headliner;
     private String[] act_names = new String[20];
     private int[] duration = new int[20];
     private int[] priority = new int[20];
-    private LocalTime[] act_times = new LocalTime[20];
     private int index = 0;
     private int i = 0;
+    private DefaultTableModel model;
+
 
     public schedule(JFrame f, JPanel p)
     {
@@ -158,13 +159,14 @@ public class schedule extends JFrame implements ActionListener
         {
             frame.getContentPane().removeAll();
             frame.repaint();  
-            this.ordering();      
+            this.scheduling();    
         }
         index++;
     }
 
-    public void ordering()
+    public void scheduling()
     {
+        this.table();
         int gap = 8;
         num_acts = Integer.parseInt(fields2[1].getText());
         int num = 1;
@@ -184,7 +186,22 @@ public class schedule extends JFrame implements ActionListener
                 }                     
             }
             num = num + 1;
-        }
-        
+        }       
     }  
+
+    public void table()
+    {
+        String[] columnNames = { "Priority", "Act time", "Act Name"};
+        
+        model = new DefaultTableModel();
+        JTable table = new JTable(model);
+        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setBounds(0, 70, 600, 600);
+        for (int i = 0; i < 3; i++)
+        {
+            model.addColumn(columnNames[i]);
+        }
+        frame.add(scrollPane);
+    }
+
 }
