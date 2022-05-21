@@ -14,21 +14,23 @@ import javax.swing.JPanel;
 public class festival extends JPanel 
 {
     private JFrame frame;
+    private JPanel panel;
    
     //constructor creates the frame for the main window
     public festival()
     {
         frame  = new JFrame("festival");
 
-        frame.setLayout(null); //allows the components to be positioned freely
+        panel = new JPanel();
+        panel.setLayout(null);
 
-        frame.getContentPane().setBackground(Color.BLACK);
+        frame.add(panel);
 
         JLabel label1 = new JLabel("Festival Scheduling");
         label1.setForeground(Color.WHITE);
         label1.setFont(new Font("Serif", Font.PLAIN, 30));
         label1.setBounds(160, 0, 400, 200);
-        frame.getContentPane().add(label1);
+        panel.add(label1);
 
         frame.setSize(600, 600);
         frame.setTitle("window");
@@ -36,7 +38,7 @@ public class festival extends JPanel
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
         
-        schedule obj = new schedule(frame);
+        schedule obj = new schedule(frame, panel);
         obj.main_window(); 
         obj.buttons();   
     }
