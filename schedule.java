@@ -176,19 +176,24 @@ public class schedule extends JFrame implements ActionListener
         num_acts = Integer.parseInt(fields2[1].getText());
         LocalTime first = headliner;
         LocalTime after = headliner;
+        int current = duration[0];
         if (headliner.isAfter(start))
         {
             model.addRow(new Object[] {priority[0], headliner , act_names[0]});
-            if (start.isAfter(first.minusMinutes(duration[1])))
+            for (int j = 1; j < num_acts; j++)
             {
-                after = after.plusMinutes(duration[0]);
-                model.addRow(new Object[] {priority[1], after , act_names[1]});
-            }
-            else
-            {
-                first = first.minusMinutes(duration[1]);
-                model.addRow(new Object[] {priority[1], first , act_names[1]});
-            }                     
+                if (start.isAfter(first.minusMinutes(duration[j])))
+                {
+                    after = after.plusMinutes(current);
+                    model.addRow(new Object[] {priority[j], after , act_names[j]});
+                    current = duration[j];
+                }
+                else
+                {
+                    first = first.minusMinutes(duration[j]);
+                    model.addRow(new Object[] {priority[j], first , act_names[j]});
+                }
+            }                        
         }
         else
         {
