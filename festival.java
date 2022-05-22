@@ -27,7 +27,7 @@ public class festival extends JPanel
         frame.add(panel);
 
         JLabel label1 = new JLabel("Festival Scheduling");
-        label1.setForeground(Color.WHITE);
+        label1.setForeground(Color.BLACK);
         label1.setFont(new Font("Serif", Font.PLAIN, 30));
         label1.setBounds(160, 0, 400, 200);
         panel.add(label1);
