@@ -28,7 +28,7 @@ public class schedule extends JFrame implements ActionListener
     private int[] duration = new int[20];
     private int[] priority = new int[20];
     private int index = 0;
-    private int i = 0;
+    private int p = 1;
     private DefaultTableModel model;
 
 
@@ -94,8 +94,7 @@ public class schedule extends JFrame implements ActionListener
                 num_acts = Integer.parseInt(fields2[1].getText());
                 time = LocalTime.parse(fields2[2].getText());
                 
-                panel.removeAll(); //clears the page by removing all the components added to it 
-                panel.repaint(); 
+                this.clear(); 
                 this.user_input();
             } 
             catch (Exception f) 
@@ -112,12 +111,18 @@ public class schedule extends JFrame implements ActionListener
 
     public void user_input()
     {
-        String[] inputs2 = {"Act name", "Duration", "Priority"};
-        int pos2 = 65;       
-        int pos = 120;
-        fields = new JTextField[3];
-        for (int i = 0; i <= 2; i++)
+        String[] inputs2 = {"Act name", "Duration"};
+        int pos2 = 145;       
+        int pos = 200;
+        fields = new JTextField[2];
+        for (int i = 0; i <= 1; i++)
         {
+            JLabel plabel = new JLabel("Priority: " + Integer.toString(p));
+            plabel.setFont(new Font("Serif", Font.PLAIN, 25));
+            plabel.setForeground(Color.BLACK); 
+            plabel.setBounds(85, 55, 185, 185);
+            panel.add(plabel);
+
             JLabel inputlabel2 = new JLabel(inputs2[i]);
             inputlabel2.setFont(new Font("Serif", Font.PLAIN, 15));
             inputlabel2.setForeground(Color.BLACK); 
@@ -140,7 +145,7 @@ public class schedule extends JFrame implements ActionListener
         {
             act_names[index] = fields[0].getText();
             duration[index] = Integer.parseInt(fields[1].getText());
-            priority[index] = Integer.parseInt(fields[2].getText());
+            priority[index] = p;
       
         } catch (Exception e) 
         {
@@ -149,16 +154,14 @@ public class schedule extends JFrame implements ActionListener
 
         if (num_acts > 1)
         {
-            for (int i = 0; i <= 2; i++)
-            {
-               fields[i].setText("");
-            }
+            this.clear(); 
+            p++;
+            this.user_input();
             num_acts = num_acts - 1;
         }
         else
         {
-            frame.getContentPane().removeAll();
-            frame.repaint();  
+            this.clear();  
             this.scheduling();    
         }
         index++;
@@ -170,33 +173,39 @@ public class schedule extends JFrame implements ActionListener
         int gap = 8;
         num_acts = Integer.parseInt(fields2[1].getText());
         int num = 1; 
-        while(num != (num_acts + 1))
-        {
-            for (int i = 0; i <= num_acts; i++)
-            {
-                if(priority[i] == num) 
-                {      
-                    model.addRow(new Object[] {priority[i], time , act_names[i]});
-                    time = time.plusMinutes(duration[i]+gap);
-                }                     
-            }
-            num = num + 1;
-        }       
+        for (int i = 0; i < num_acts; i++)
+        {     
+            model.addRow(new Object[] {priority[i], time , act_names[i]});
+            time = time.plusMinutes(duration[i]+gap);                    
+        }   
     }  
 
     public void table()
     {
         String[] columnNames = { "Priority", "Act time", "Act Name"};
+
+        JLabel eventlabel = new JLabel("Event Name: " + show_name);
+        eventlabel.setForeground(Color.BLACK);
+        eventlabel.setFont(new Font("Serif", Font.PLAIN, 15));
+        eventlabel.setBounds(0, 0, 400, 200);
+        panel.add(eventlabel);
         
         model = new DefaultTableModel();
         JTable table = new JTable(model);
+        table.setRowHeight(40);
         JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.setBounds(0, 70, 600, 600);
+        scrollPane.setBounds(0, 120, 600, 600);
         for (int i = 0; i < 3; i++)
         {
             model.addColumn(columnNames[i]);
         }
         frame.add(scrollPane);
+    }
+
+    public void clear()
+    {
+        panel.removeAll();
+        panel.repaint(); 
     }
 
 }
