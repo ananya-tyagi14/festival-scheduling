@@ -19,7 +19,6 @@ public class schedule extends JFrame implements ActionListener
     private JPanel panel;
     private JTextField fields[];
     private JTextField fields2[];
-    private JButton main_button;
     private JButton buttons[];
     private String show_name;
     private int num_acts;
@@ -31,6 +30,7 @@ public class schedule extends JFrame implements ActionListener
     private int index = 0;
     private int p = 1;
     private DefaultTableModel model;
+    private int row;
 
 
     public schedule(JFrame f, JPanel p)
@@ -67,27 +67,31 @@ public class schedule extends JFrame implements ActionListener
     public void buttons()
     {
         int pos = 90;
-        String[] names = {"Back", "enter"};
-        buttons = new JButton[2];
-
-        main_button = new JButton("Next");
-        main_button.setBounds(90, 460, 430, 60);
+        String[] names = {"Next", "Delete", "Back", "enter"};
+        buttons = new JButton[4];
 
         for (int j = 0; j <= 1; j++)
+        {
+            buttons[j] = new JButton(names[j]);
+            buttons[j].setBounds(90, 460, 430, 60);
+        }
+
+        for (int j = 2; j <= 3; j++)
         {
             buttons[j] = new JButton(names[j]);
             buttons[j].setBounds(pos, 450, 210, 60);  
             pos = pos + 220;
         }  
-        panel.add(main_button);
-        main_button.addActionListener(this);
+        panel.add(buttons[0]);
         buttons[0].addActionListener(this);
         buttons[1].addActionListener(this);
+        buttons[2].addActionListener(this);
+        buttons[3].addActionListener(this);
     }
 
     public void actionPerformed(ActionEvent e)
     {
-        if (e.getSource() == main_button)
+        if (e.getSource() == buttons[0])
         {
             try 
             {
@@ -96,7 +100,7 @@ public class schedule extends JFrame implements ActionListener
                 start = LocalTime.parse(fields2[2].getText());
                 headliner = LocalTime.parse(fields2[3].getText());
                 
-                this.clear(); 
+                this.clear();
                 this.user_input();
             } 
             catch (Exception f) 
@@ -104,9 +108,14 @@ public class schedule extends JFrame implements ActionListener
                 JOptionPane.showMessageDialog(frame, "Error: no information was entered");
             }            
         }
-        else if (e.getSource() == buttons[1])
+        else if (e.getSource() == buttons[3])
         {
             this.getinfo();
+        
+        }
+        else if (e.getSource() == buttons[1])
+        {
+            model.removeRow(row);        
         }
 
     }
@@ -137,8 +146,8 @@ public class schedule extends JFrame implements ActionListener
             pos = pos + 100;
             panel.add(fields[i]);       
         }
-        panel.add(buttons[0]);
-        panel.add(buttons[1]);
+        panel.add(buttons[2]);
+        panel.add(buttons[3]);
     }
 
     public void getinfo()
@@ -226,6 +235,15 @@ public class schedule extends JFrame implements ActionListener
             model.addColumn(columnNames[i]);
         }
         frame.add(scrollPane);
+        panel.add(buttons[1]);
+
+        table.addMouseListener(new java.awt.event.MouseAdapter()
+        {
+            public void mouseClicked(java.awt.event.MouseEvent e)
+            {
+                row= table.rowAtPoint(e.getPoint());          
+            }
+        });
     }
 
     public void clear()
