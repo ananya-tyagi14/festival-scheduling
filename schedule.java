@@ -154,8 +154,18 @@ public class schedule extends JFrame implements ActionListener
         }
         else if (e.getSource() == buttons[3])
         {
-            //deletes the row on based on the mouse click event
-            model.removeRow(row); 
+            String value = table.getModel().getValueAt(row, 0).toString();
+            int num = Integer.parseInt(value);
+
+            for (int i = (num-1) ; i < num_acts -1 ; i++) {
+                act_names[i] = act_names[i + 1];
+                duration[i] = duration[i + 1];
+                priority[i+1] = priority[i+2];
+            }
+            num_acts = num_acts - 1;
+            model.getDataVector().removeAllElements();
+            model.fireTableDataChanged();
+            this.scheduling();
         }
     }
 
@@ -219,7 +229,9 @@ public class schedule extends JFrame implements ActionListener
         }
         else
         {
-            this.clear();  
+            this.clear();
+            num_acts = Integer.parseInt(fields2[1].getText()); //retrieve again as its value was changed in a different method
+            this.table();
             this.scheduling();    
         }
         index++; //incrementing counter for arrays 
@@ -230,10 +242,8 @@ public class schedule extends JFrame implements ActionListener
      */
     public void scheduling()
     {
-        this.table(); 
         int gap = 8; //the gap between the acts 
-        num_acts = Integer.parseInt(fields2[1].getText()); //retrieve again as its value was changed in a different method
-
+        
         //variables to store the current state of the instructions as the loop runs
         LocalTime first = headliner; 
         LocalTime after = headliner;
@@ -308,7 +318,7 @@ public class schedule extends JFrame implements ActionListener
         {
             public void mouseClicked(java.awt.event.MouseEvent e)
             {
-                row = table.rowAtPoint(e.getPoint());          
+                row = table.rowAtPoint(e.getPoint());       
             }
         });
     }
