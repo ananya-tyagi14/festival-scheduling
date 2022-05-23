@@ -270,7 +270,7 @@ public class schedule extends JFrame implements ActionListener
         panel.add(eventlabel);
         
         model = new DefaultTableModel();
-        JTable table = new JTable(model);
+        table = new JTable(model);
         table.setRowHeight(40);
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setBounds(0, 120, 600, 600);
@@ -294,20 +294,35 @@ public class schedule extends JFrame implements ActionListener
 
     public void textfile()
     {
+        String[] column = {"Priority: ", "Act Times: ", "Act Name: "};
         try 
         {
-            File filepath = new File("//home//tyagia//h-drive//scc110//java//coursework//festival-scheduling//schedule.txt");
+            File filepath = new File("//home//tyagia//h-drive//scc110//java//coursework//back-up//schedule.txt");
 
-            // if file doesnt exists, then creates it
+            // if file doesnt exists, then create it
             if (!filepath.exists()) 
             {
                 filepath.createNewFile();
             }
             FileWriter fw = new FileWriter("schedule.txt");
             BufferedWriter bw = new BufferedWriter(fw); 
-            bw.write("hello");
+            bw.write("Event name: " + (String)show_name + "\n");
+            bw.write("Start Time: " + (String)start.toString());
+            bw.write("\n\n");
+
+            for (int i = 0; i < num_acts; i++)
+            {
+                for (int k = 0; k < 3; k++)
+                {
+                    String value = table.getModel().getValueAt(i, k).toString();
+                    bw.write((String)column[k] + (String)value);
+                    bw.write("\n");
+                }
+            
+                bw.write("______________\n\n");
+            }
             bw.close();
-            fw.close();              
+            fw.close();                
         }
         catch (IOException e) 
         {
