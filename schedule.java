@@ -11,15 +11,21 @@ import javax.swing.JOptionPane;
 import java.time.LocalTime;
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
+import java.io.File;
+import java.io.IOException;
+import java.io.FileWriter; 
+import java.io.BufferedWriter;
 
 
 public class schedule extends JFrame implements ActionListener
 {
     private JFrame frame;
     private JPanel panel;
+
     private JTextField fields[];
     private JTextField fields2[];
     private JButton buttons[];
+
     private String show_name;
     private int num_acts;
     private LocalTime start;
@@ -27,12 +33,20 @@ public class schedule extends JFrame implements ActionListener
     private String[] act_names = new String[20];
     private int[] duration = new int[20];
     private int[] priority = new int[20];
+
     private int index = 0;
     private int p = 1;
+
     private DefaultTableModel model;
+    private JTable table;
     private int row;
 
-
+     /**
+     * creates a view of schedule.
+     * 
+     * @param f the frame of the window
+     * @param p the panel in which components will be added
+     */
     public schedule(JFrame f, JPanel p)
     {
         frame = f;
@@ -40,14 +54,19 @@ public class schedule extends JFrame implements ActionListener
 
     }
 
+    /**
+     * method creates the first initial form layout - called within the festival class
+     */
     public void main_window()
     {
         int box_pos = 150;
         int label_pos = 90;
         String[] inputs = {"Event name", "Number of acts", "Start time", "Headliner time"};
 
-        fields2 = new JTextField[4];
+        // array stores the textfields created within the loop
+        fields2 = new JTextField[4]; 
 
+        // loop creates labels and textfields instead of specifiying each one manually
         for (int i = 0; i <= 3; i++)
         {
             JLabel inputLabel = new JLabel(inputs[i]);
@@ -64,22 +83,29 @@ public class schedule extends JFrame implements ActionListener
         }
     }
 
+    /**
+     * method creates the buttons - called within the festival class
+     */
     public void buttons()
     {
         int pos = 90;
-        String[] names = {"Next", "Delete", "Back", "enter"};
+
+        //stores the button labels
+        String[] names = {"Next", "Enter", "Create File", "Delete"};
         buttons = new JButton[4];
 
+        //this loop creates the longer buttons
         for (int j = 0; j <= 1; j++)
         {
             buttons[j] = new JButton(names[j]);
             buttons[j].setBounds(90, 460, 430, 60);
         }
 
+        //this loop creates the shorter buttons
         for (int j = 2; j <= 3; j++)
         {
             buttons[j] = new JButton(names[j]);
-            buttons[j].setBounds(pos, 450, 210, 60);  
+            buttons[j].setBounds(pos, 450, 210, 40);  
             pos = pos + 220;
         }  
         panel.add(buttons[0]);
@@ -89,12 +115,16 @@ public class schedule extends JFrame implements ActionListener
         buttons[3].addActionListener(this);
     }
 
+    /**
+     * method is automatically called when button is clicked
+     */
     public void actionPerformed(ActionEvent e)
     {
         if (e.getSource() == buttons[0])
         {
             try 
             {
+                // retrive data from textfields and stores them in variables
                 show_name = fields2[0].getText();
                 num_acts = Integer.parseInt(fields2[1].getText());
                 start = LocalTime.parse(fields2[2].getText());
@@ -105,24 +135,33 @@ public class schedule extends JFrame implements ActionListener
             } 
             catch (Exception f) 
             {
+                // creates an error message box
                 JOptionPane.showMessageDialog(frame, "Error: no information was entered");
             }            
         }
-        else if (e.getSource() == buttons[3])
+        else if (e.getSource() == buttons[1])
         {
             this.getinfo();
         
         }
-        else if (e.getSource() == buttons[1])
+        else if (e.getSource() == buttons[2])
         {
-            model.removeRow(row);        
+            this.textfile();
+        }
+        else if (e.getSource() == buttons[3])
+        {
+            model.removeRow(row); 
         }
 
     }
 
+    /**
+     * method creates the form for the other information required - called within buttons 
+     */
     public void user_input()
     {
         String[] inputs2 = {"Act name", "Duration"};
+        //position variables for components
         int pos2 = 145;       
         int pos = 200;
         fields = new JTextField[2];
@@ -146,10 +185,12 @@ public class schedule extends JFrame implements ActionListener
             pos = pos + 100;
             panel.add(fields[i]);       
         }
-        panel.add(buttons[2]);
-        panel.add(buttons[3]);
+        panel.add(buttons[1]);
     }
 
+    /**
+     * method retrieves data from second form and clears it until acts have been entered  - called within buttons 
+     */
     public void getinfo()
     {  
         try 
@@ -178,6 +219,9 @@ public class schedule extends JFrame implements ActionListener
         index++;
     }
 
+    /**
+     * method responsible for allocating times to each act based around the headliner - called within getinfo method
+     */
     public void scheduling()
     {
         this.table();
@@ -235,7 +279,8 @@ public class schedule extends JFrame implements ActionListener
             model.addColumn(columnNames[i]);
         }
         frame.add(scrollPane);
-        panel.add(buttons[1]);
+        panel.add(buttons[2]);
+        panel.add(buttons[3]);
 
         table.addMouseListener(new java.awt.event.MouseAdapter()
         {
@@ -244,6 +289,32 @@ public class schedule extends JFrame implements ActionListener
                 row= table.rowAtPoint(e.getPoint());          
             }
         });
+    }
+
+
+    public void textfile()
+    {
+        try 
+        {
+            File filepath = new File("//home//tyagia//h-drive//scc110//java//coursework//festival-scheduling//schedule.txt");
+
+            // if file doesnt exists, then creates it
+            if (!filepath.exists()) 
+            {
+                filepath.createNewFile();
+            }
+            FileWriter fw = new FileWriter("schedule.txt");
+            BufferedWriter bw = new BufferedWriter(fw); 
+            bw.write("hello");
+            bw.close();
+            fw.close();              
+        }
+        catch (IOException e) 
+        {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+
     }
 
     public void clear()
