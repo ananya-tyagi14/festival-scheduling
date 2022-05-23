@@ -1,15 +1,12 @@
 import javax.swing.*;
 import java.awt.Color;
 import javax.swing.JLabel;
-import javax.swing.JButton;
-import javax.swing.JTextField;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import javax.swing.JOptionPane;
-import java.time.LocalTime;
 import javax.swing.JPanel;
+import java.awt.Font;
+
+/** This class creates the main frame and window for the schedule
+ * @author Ananya 
+*/
 
 public class festival extends JPanel 
 {
@@ -22,7 +19,7 @@ public class festival extends JPanel
         frame  = new JFrame("festival");
 
         panel = new JPanel();
-        panel.setLayout(null);
+        panel.setLayout(null); // null layout allows components to be prositioned more freely
 
         frame.add(panel);
 
@@ -38,6 +35,7 @@ public class festival extends JPanel
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
         
+        //creates an object of the class schedule and then uses it to call methods from within it
         schedule obj = new schedule(frame, panel);
         obj.main_window(); 
         obj.buttons();   
@@ -45,6 +43,6 @@ public class festival extends JPanel
 
     public static void main(String[] args) 
     {   
-        festival obj2 = new festival();
+        festival obj2 = new festival(); //creates an instance of this class 
     }       
 } 
