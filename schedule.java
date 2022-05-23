@@ -32,6 +32,7 @@ public class schedule extends JFrame implements ActionListener
     private int num_acts;
     private LocalTime start;
     private LocalTime headliner;
+    private LocalTime end;
     private String[] act_names = new String[20];
     private int[] duration = new int[20];
     private int[] priority = new int[20];
@@ -109,7 +110,7 @@ public class schedule extends JFrame implements ActionListener
         for (int j = 2; j <= 3; j++)
         {
             buttons[j] = new JButton(names[j]);
-            buttons[j].setBounds(pos, 450, 210, 40);  
+            buttons[j].setBounds(pos, 510, 210, 40);  
             pos = pos + 220;
         }  
         panel.add(buttons[0]);
@@ -152,18 +153,20 @@ public class schedule extends JFrame implements ActionListener
         {
             this.textfile();
         }
+        //delete button creates a new table with rescheduled data once a row is removed 
         else if (e.getSource() == buttons[3])
         {
             String value = table.getModel().getValueAt(row, 0).toString();
             int num = Integer.parseInt(value);
 
+            //updates arrays once item is removed
             for (int i = (num-1) ; i < num_acts -1 ; i++) {
                 act_names[i] = act_names[i + 1];
                 duration[i] = duration[i + 1];
                 priority[i+1] = priority[i+2];
             }
             num_acts = num_acts - 1;
-            model.getDataVector().removeAllElements();
+            model.getDataVector().removeAllElements(); //removes all the previous rows 
             model.fireTableDataChanged();
             this.scheduling();
         }
@@ -203,7 +206,7 @@ public class schedule extends JFrame implements ActionListener
     }
 
     /**
-     * method retrieves data from second form and clears it until acts have been entered  - called within buttons 
+     * method retrieves data from the second form and clears it until acts have been entered  - called within buttons 
      */
     public void getinfo()
     {  
@@ -242,11 +245,11 @@ public class schedule extends JFrame implements ActionListener
      */
     public void scheduling()
     {
-        int gap = 8; //the gap between the acts 
+        int gap = 8;
         
         //variables to store the current state of the instructions as the loop runs
         LocalTime first = headliner; 
-        LocalTime after = headliner;
+        end = headliner;
         int current = duration[0];
 
         //conditions check if start time is equal to the headliner time. Act times are then manipulated accordingly
@@ -258,8 +261,8 @@ public class schedule extends JFrame implements ActionListener
                 //inserts the act before the headliner if its duration does not exceed the start time and after if it is too long 
                 if (start.isAfter(first.minusMinutes(duration[j] + gap)))
                 {
-                    after = after.plusMinutes(current + gap);
-                    model.addRow(new Object[] {priority[j], after , act_names[j]});
+                    end = end.plusMinutes(current + gap);
+                    model.addRow(new Object[] {priority[j], end , act_names[j]});
                     current = duration[j];
                 }
                 else
@@ -274,10 +277,11 @@ public class schedule extends JFrame implements ActionListener
             for (int i = 0; i < num_acts; i++)
             {   
                 model.addRow(new Object[] {priority[i], headliner , act_names[i]});
-                System.out.println(headliner);
                 headliner = headliner.plusMinutes(duration[i]+gap);   
             }  
         }  
+        end = end.plusMinutes(current);
+        model.addRow(new Object[] {"-", end , "End"});
     }  
 
     /**
@@ -304,7 +308,7 @@ public class schedule extends JFrame implements ActionListener
         table = new JTable(model);
         table.setRowHeight(40);
         JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.setBounds(0, 140, 600, 600);
+        scrollPane.setBounds(0, 140, 600, 300);
         for (int i = 0; i < 3; i++)
         {
             model.addColumn(columnNames[i]);
@@ -343,17 +347,18 @@ public class schedule extends JFrame implements ActionListener
             bw.write("Start Time: " + (String)start.toString()+ "\n");
             bw.write("_______________________________________________\n\n");
 
-            for (int i = 0; i < table.getRowCount(); i++)
+            for (int i = 0; i < table.getRowCount()-1; i++)
             {
                 for (int k = 0; k < 3; k++)
                 {
                     String value = table.getModel().getValueAt(i, k).toString(); //converts all the data into string type 
                     bw.write((String)columnNames[k] + ": " + (String)value);
                     bw.write("\n");
-                }
-            
-                bw.write("______________\n\n");
+                }          
+                bw.write("\n");
             }
+            bw.write("_______________________________________________\n\n");
+            bw.write("Event End: " + (String)end.toString());
             bw.close();
             fw.close();                
         }
