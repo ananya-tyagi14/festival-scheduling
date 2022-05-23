@@ -33,6 +33,7 @@ public class schedule extends JFrame implements ActionListener
     private String[] act_names = new String[20];
     private int[] duration = new int[20];
     private int[] priority = new int[20];
+    private String columnNames[];
 
     private int index = 0;
     private int p = 1;
@@ -152,7 +153,6 @@ public class schedule extends JFrame implements ActionListener
         {
             model.removeRow(row); 
         }
-
     }
 
     /**
@@ -235,15 +235,15 @@ public class schedule extends JFrame implements ActionListener
             model.addRow(new Object[] {priority[0], headliner , act_names[0]});
             for (int j = 1; j < num_acts; j++)
             {
-                if (start.isAfter(first.minusMinutes(duration[j])))
+                if (start.isAfter(first.minusMinutes(duration[j] + gap)))
                 {
-                    after = after.plusMinutes(current);
+                    after = after.plusMinutes(current + gap);
                     model.addRow(new Object[] {priority[j], after , act_names[j]});
                     current = duration[j];
                 }
                 else
                 {
-                    first = first.minusMinutes(duration[j]);
+                    first = first.minusMinutes(duration[j] + gap);
                     model.addRow(new Object[] {priority[j], first , act_names[j]});
                 }
             }                        
@@ -261,19 +261,26 @@ public class schedule extends JFrame implements ActionListener
 
     public void table()
     {
-        String[] columnNames = { "Priority", "Act time", "Act Name"};
+        columnNames = new String[] {"Priority", "Act time", "Act Name"};
 
         JLabel eventlabel = new JLabel("Event Name: " + show_name);
         eventlabel.setForeground(Color.BLACK);
         eventlabel.setFont(new Font("Serif", Font.PLAIN, 15));
         eventlabel.setBounds(0, 0, 400, 200);
         panel.add(eventlabel);
+
+        JLabel timelabel = new JLabel("Event Time: " + start);
+        timelabel.setForeground(Color.BLACK);
+        timelabel.setFont(new Font("Serif", Font.PLAIN, 15));
+        timelabel.setBounds(0, 20, 400, 200);
+        panel.add(timelabel);
+    
         
         model = new DefaultTableModel();
         table = new JTable(model);
         table.setRowHeight(40);
         JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.setBounds(0, 120, 600, 600);
+        scrollPane.setBounds(0, 140, 600, 600);
         for (int i = 0; i < 3; i++)
         {
             model.addColumn(columnNames[i]);
@@ -294,7 +301,6 @@ public class schedule extends JFrame implements ActionListener
 
     public void textfile()
     {
-        String[] column = {"Priority: ", "Act Times: ", "Act Name: "};
         try 
         {
             File filepath = new File("//home//tyagia//h-drive//scc110//java//coursework//back-up//schedule.txt");
@@ -307,15 +313,15 @@ public class schedule extends JFrame implements ActionListener
             FileWriter fw = new FileWriter("schedule.txt");
             BufferedWriter bw = new BufferedWriter(fw); 
             bw.write("Event name: " + (String)show_name + "\n");
-            bw.write("Start Time: " + (String)start.toString());
-            bw.write("\n\n");
+            bw.write("Start Time: " + (String)start.toString()+ "\n");
+            bw.write("_______________________________________________\n\n");
 
             for (int i = 0; i < num_acts; i++)
             {
                 for (int k = 0; k < 3; k++)
                 {
                     String value = table.getModel().getValueAt(i, k).toString();
-                    bw.write((String)column[k] + (String)value);
+                    bw.write((String)columnNames[k] + ": " + (String)value);
                     bw.write("\n");
                 }
             
