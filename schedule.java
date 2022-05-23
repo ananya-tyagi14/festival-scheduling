@@ -16,7 +16,9 @@ import java.io.IOException;
 import java.io.FileWriter; 
 import java.io.BufferedWriter;
 
-
+/** This class creates the components to be added, takes user input and produces the schedule
+ * @author Ananya 
+*/
 public class schedule extends JFrame implements ActionListener
 {
     private JFrame frame;
@@ -35,9 +37,11 @@ public class schedule extends JFrame implements ActionListener
     private int[] priority = new int[20];
     private String columnNames[];
 
+    //counters 
     private int index = 0;
     private int p = 1;
 
+    //elements of the final table
     private DefaultTableModel model;
     private JTable table;
     private int row;
@@ -52,7 +56,6 @@ public class schedule extends JFrame implements ActionListener
     {
         frame = f;
         panel = p;
-
     }
 
     /**
@@ -62,7 +65,7 @@ public class schedule extends JFrame implements ActionListener
     {
         int box_pos = 150;
         int label_pos = 90;
-        String[] inputs = {"Event name", "Number of acts", "Start time", "Headliner time"};
+        String[] inputs = {"Event name", "Number of acts", "Start time", "Headliner time"}; //textfield labels 
 
         // array stores the textfields created within the loop
         fields2 = new JTextField[4]; 
@@ -92,7 +95,7 @@ public class schedule extends JFrame implements ActionListener
         int pos = 90;
 
         //stores the button labels
-        String[] names = {"Next", "Enter", "Create File", "Delete"};
+        String[] names = {"Next", "Enter", "Create File", "Delete"}; //button labels 
         buttons = new JButton[4];
 
         //this loop creates the longer buttons
@@ -127,8 +130,8 @@ public class schedule extends JFrame implements ActionListener
             {
                 // retrive data from textfields and stores them in variables
                 show_name = fields2[0].getText();
-                num_acts = Integer.parseInt(fields2[1].getText());
-                start = LocalTime.parse(fields2[2].getText());
+                num_acts = Integer.parseInt(fields2[1].getText()); //converts textfield string into an int
+                start = LocalTime.parse(fields2[2].getText());  //converts textfield string into time format 
                 headliner = LocalTime.parse(fields2[3].getText());
                 
                 this.clear();
@@ -151,6 +154,7 @@ public class schedule extends JFrame implements ActionListener
         }
         else if (e.getSource() == buttons[3])
         {
+            //deletes the row on based on the mouse click event
             model.removeRow(row); 
         }
     }
@@ -195,6 +199,7 @@ public class schedule extends JFrame implements ActionListener
     {  
         try 
         {
+            //storing the inputs in the initialised arrays 
             act_names[index] = fields[0].getText();
             duration[index] = Integer.parseInt(fields[1].getText());
             priority[index] = p;
@@ -204,6 +209,7 @@ public class schedule extends JFrame implements ActionListener
             JOptionPane.showMessageDialog(frame, "Error: no information was entered");
         }
 
+        //conditions check to see if the form should be displayed or cleared when max number of acts is reached
         if (num_acts > 1)
         {
             this.clear(); 
@@ -216,7 +222,7 @@ public class schedule extends JFrame implements ActionListener
             this.clear();  
             this.scheduling();    
         }
-        index++;
+        index++; //incrementing counter for arrays 
     }
 
     /**
@@ -224,17 +230,22 @@ public class schedule extends JFrame implements ActionListener
      */
     public void scheduling()
     {
-        this.table();
-        int gap = 8;
-        num_acts = Integer.parseInt(fields2[1].getText());
-        LocalTime first = headliner;
+        this.table(); 
+        int gap = 8; //the gap between the acts 
+        num_acts = Integer.parseInt(fields2[1].getText()); //retrieve again as its value was changed in a different method
+
+        //variables to store the current state of the instructions as the loop runs
+        LocalTime first = headliner; 
         LocalTime after = headliner;
         int current = duration[0];
+
+        //conditions check if start time is equal to the headliner time. Act times are then manipulated accordingly
         if (headliner.isAfter(start))
         {
             model.addRow(new Object[] {priority[0], headliner , act_names[0]});
             for (int j = 1; j < num_acts; j++)
             {
+                //inserts the act before the headliner if its duration does not exceed the start time and after if it is too long 
                 if (start.isAfter(first.minusMinutes(duration[j] + gap)))
                 {
                     after = after.plusMinutes(current + gap);
@@ -259,6 +270,9 @@ public class schedule extends JFrame implements ActionListener
         }  
     }  
 
+    /**
+     * method creates the table on which the final schedule will be displayed- called within the scheduling method
+     */
     public void table()
     {
         columnNames = new String[] {"Priority", "Act time", "Act Name"};
@@ -275,7 +289,7 @@ public class schedule extends JFrame implements ActionListener
         timelabel.setBounds(0, 20, 400, 200);
         panel.add(timelabel);
     
-        
+        //creates a default table 
         model = new DefaultTableModel();
         table = new JTable(model);
         table.setRowHeight(40);
@@ -289,16 +303,19 @@ public class schedule extends JFrame implements ActionListener
         panel.add(buttons[2]);
         panel.add(buttons[3]);
 
+        //retrieves the row number when selected with the mouse click
         table.addMouseListener(new java.awt.event.MouseAdapter()
         {
             public void mouseClicked(java.awt.event.MouseEvent e)
             {
-                row= table.rowAtPoint(e.getPoint());          
+                row = table.rowAtPoint(e.getPoint());          
             }
         });
     }
 
-
+    /**
+     * method creates and populates a textfile with the table info - called in the buttons method
+     */
     public void textfile()
     {
         try 
@@ -316,11 +333,11 @@ public class schedule extends JFrame implements ActionListener
             bw.write("Start Time: " + (String)start.toString()+ "\n");
             bw.write("_______________________________________________\n\n");
 
-            for (int i = 0; i < num_acts; i++)
+            for (int i = 0; i < table.getRowCount(); i++)
             {
                 for (int k = 0; k < 3; k++)
                 {
-                    String value = table.getModel().getValueAt(i, k).toString();
+                    String value = table.getModel().getValueAt(i, k).toString(); //converts all the data into string type 
                     bw.write((String)columnNames[k] + ": " + (String)value);
                     bw.write("\n");
                 }
@@ -330,7 +347,7 @@ public class schedule extends JFrame implements ActionListener
             bw.close();
             fw.close();                
         }
-        catch (IOException e) 
+        catch (IOException e) //will be run if an unexpected error occurs
         {
             System.out.println("An error occurred.");
             e.printStackTrace();
@@ -338,6 +355,9 @@ public class schedule extends JFrame implements ActionListener
 
     }
 
+    /**
+     * method clears the panel and then allows new components to be added
+     */
     public void clear()
     {
         panel.removeAll();
